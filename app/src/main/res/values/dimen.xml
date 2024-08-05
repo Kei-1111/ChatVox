@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="top_app_bar_height">64.dp</dimen>
+
+    <dimen name="small_icon_size">24.dp</dimen>
+    <dimen name="medium_icon_size">30.dp</dimen>
+
+    <dimen name="circle_indicator_width">3.dp</dimen>
+
+    <dimen name="max_chat_text_width">300.dp</dimen>
+
+    <dimen name="max_chat_image_width">200.dp</dimen>
+    <dimen name="max_chat_image_height">300.dp</dimen>
+
+    <dimen name="call_screen_voicevox_icon_size">200.dp</dimen>
+    <dimen name="extra_large_icon_size">64.dp</dimen>
+
+<!--    Padding Values    -->
+    <dimen name="tiny_padding">3.dp</dimen>
+    <dimen name="extra_small_padding">5.dp</dimen>
+    <dimen name="small_padding">10.dp</dimen>
+    <dimen name="medium_padding">15.dp</dimen>
+    <dimen name="large_padding">20.dp</dimen>
+    <dimen name="extra_large_padding">30.dp</dimen>
+</resources>
