@@ -3,9 +3,9 @@
     android:description="@string/app_name"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:previewLayout="@layout/widget_preview"
-    android:minWidth="110dp"
-    android:minHeight="40dp"
+    android:minWidth="100dp"
+    android:minHeight="100dp"
     android:previewImage="@null"
-    android:resizeMode="none"
+    android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen" />
