@@ -8,8 +8,8 @@ import com.example.chatvox.ui.theme.darkScheme
 import com.example.chatvox.ui.theme.lightScheme
 
 @Composable
-fun GlanceTheme(
-    dynamicColor: Boolean = true,
+fun WidgetTheme(
+    dynamicColor: Boolean,
     content: @Composable () -> Unit,
 ) {
     val colors =

@@ -15,8 +15,6 @@ import com.example.chatvox.model.toMessage
 import com.example.chatvox.model.toMessageEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +29,7 @@ class ChatViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
     private val audioRepository: AudioRepository,
     private val audioPlayer: AudioPlayer,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<ChatUiState> = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()

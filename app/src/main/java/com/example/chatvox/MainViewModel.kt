@@ -2,7 +2,6 @@ package com.example.chatvox
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chatvox.data.AppPreferencesRepository
 import com.example.chatvox.model.AppSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository
+    private val appPreferencesRepository: AppPreferencesRepository,
 ) : ViewModel() {
 
     val appSettings = appPreferencesRepository.appSettings.stateIn(
@@ -24,7 +23,12 @@ class MainViewModel @Inject constructor(
 
     fun setUserName(userName: String) {
         viewModelScope.launch {
-            appPreferencesRepository.updateAppSettings(appSettings.value.copy(userName = userName))
+            appPreferencesRepository.updateAppSettings(
+                appSettings.value.copy(
+                    userName = userName,
+                    isNotLoggedIn = false
+                )
+            )
         }
     }
 }
