@@ -29,15 +29,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.util.lerp
 import com.example.chatvox.R
 import com.example.chatvox.data.VoicevoxDataStore
-import com.example.chatvox.ui.navigation.Screens
 import com.example.chatvox.ui.component.ChatVoxTopAppBar
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.example.chatvox.ui.navigation.Screens
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    toTalkScreen: (VoicevoxDataStore.VoicevoxType) -> Unit,
+    toChatScreen: (VoicevoxDataStore.VoicevoxType) -> Unit,
     toSettingsScreen: () -> Unit,
 ) {
     val actualPageCount = VoicevoxDataStore.list.size
@@ -104,7 +103,7 @@ fun HomeScreen(
                         )
                         .clickable(
                             onClick = {
-                                toTalkScreen(VoicevoxDataStore.list[actualPage].voicevoxType)
+                                toChatScreen(VoicevoxDataStore.list[actualPage].voicevoxType)
                             }
                         ),
                 ) {

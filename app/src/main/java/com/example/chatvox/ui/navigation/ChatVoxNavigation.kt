@@ -7,10 +7,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.chatvox.ui.screen.home.HomeScreen
-import com.example.chatvox.ui.screen.chat.ChatScreen
-import com.example.chatvox.ui.navigation.Screens.*
+import com.example.chatvox.ui.navigation.Screens.Call
+import com.example.chatvox.ui.navigation.Screens.Chat
+import com.example.chatvox.ui.navigation.Screens.Home
+import com.example.chatvox.ui.navigation.Screens.Settings
 import com.example.chatvox.ui.screen.call.CallScreen
+import com.example.chatvox.ui.screen.chat.ChatScreen
+import com.example.chatvox.ui.screen.home.HomeScreen
 import com.example.chatvox.ui.screen.settings.SettingsScreen
 
 @Composable
@@ -25,7 +28,7 @@ fun ChatVoxNavigation(
     ){
         composable(route = Home.route){
             HomeScreen(
-                toTalkScreen = {
+                toChatScreen = {
                     navController.navigate("${Chat.route}/${it.name}")
                 },
                 toSettingsScreen = {
@@ -39,12 +42,12 @@ fun ChatVoxNavigation(
             arguments = listOf(navArgument("voicevoxType") { type = NavType.StringType })
         ){
             ChatScreen(
-                toPreviousScreen = {
-                    navController.popBackStack()
+                toHomeScreen = {
+                    navController.navigate(Home.route)
                 },
                 toCallScreen = {
                     navController.navigate("${Call.route}/${it.name}")
-                }
+                },
             )
         }
 

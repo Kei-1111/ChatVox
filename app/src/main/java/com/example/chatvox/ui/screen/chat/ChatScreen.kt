@@ -79,8 +79,8 @@ import java.io.IOException
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(),
-    toPreviousScreen: () -> Unit,
-    toCallScreen: (VoicevoxDataStore.VoicevoxType) -> Unit
+    toHomeScreen: () -> Unit,
+    toCallScreen: (VoicevoxDataStore.VoicevoxType) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -149,7 +149,7 @@ fun ChatScreen(
             ChatVoxTopAppBar(
                 title = viewModel.currentVoicevox.name,
                 currentScreen = Screens.Chat,
-                back = toPreviousScreen,
+                back = toHomeScreen,
                 action = {
                     toCallScreen(viewModel.currentVoicevox.voicevoxType)
                 },
