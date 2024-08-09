@@ -1,5 +1,6 @@
 package com.example.chatvox.widget
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -8,13 +9,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.DpSize
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.LocalSize
+import androidx.glance.action.Action
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
@@ -25,8 +27,6 @@ import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -35,22 +35,25 @@ import com.example.chatvox.R
 import com.example.chatvox.data.AppPreferencesRepository
 import com.example.chatvox.data.VoicevoxDataStore
 import com.example.chatvox.model.AppSettings
+import com.example.chatvox.model.Voicevox
 import com.example.chatvox.ui.navigation.Screens
+import com.example.chatvox.widget.ChatvoxWidget.Companion.LARGE_SQUARE
+import com.example.chatvox.widget.ChatvoxWidget.Companion.SMALL_SQUARE
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatvoxWidgetContent(
-    size: Dp,
     appPreferencesRepository: AppPreferencesRepository,
 ) {
     var appSettings by remember { mutableStateOf(AppSettings()) }
-    var count by remember { mutableStateOf(0) }
+    var index by remember { mutableStateOf(0) }
 
     val destinationKey = ActionParameters.Key<String>(Screens.KEY_DESTINATION)
 
     val indexKey = ActionParameters.Key<Int>(UpdateIndexAction.WIDGET_CURRENT_VOICEVOX_INDEX)
 
     val context = LocalContext.current
+    val currentSize = LocalSize.current
 
 
     LaunchedEffect(Unit) {
@@ -61,76 +64,129 @@ fun ChatvoxWidgetContent(
 
     LaunchedEffect(Unit) {
         appPreferencesRepository.widgetCurrentVoicevoxIndex.collect {
-            count = it
+            index = it
         }
     }
 
     WidgetTheme(
         dynamicColor = appSettings.isDynamicColor
     ) {
-        Box(
-            modifier = GlanceModifier
-                .size(size)
-                .background(colorProvider = GlanceTheme.colors.surface),
-            contentAlignment = Alignment.Center
-        ) {
-            if (size > 100.dp) {
-                Row(
-                    modifier = GlanceModifier.fillMaxWidth()
-                ) {
-                    GlanceIcon(
-                        modifier = GlanceModifier
-                            .size(size / 5)
-                            .clickable(
-                                onClick = actionRunCallback<UpdateIndexAction>(
-                                    parameters = actionParametersOf(
-                                        indexKey to (count - 1).let { if (it < 0) VoicevoxDataStore.list.size - 1 else it }
-                                    )
-                                )
-                            ),
-                        iconRes = R.drawable.ic_previous,
-                        contentDescription = "previous",
-                        color = GlanceTheme.colors.primary.getColor(context),
-                    )
-                    Spacer(
-                        modifier = GlanceModifier.defaultWeight()
-                    )
-                    GlanceIcon(
-                        modifier = GlanceModifier
-                            .size(size / 5)
-                            .clickable(
-                                onClick = actionRunCallback<UpdateIndexAction>(
-                                    parameters = actionParametersOf(
-                                        indexKey to (count + 1).let { if (it > VoicevoxDataStore.list.size - 1) 0 else it }
-                                    )
-                                )
-                            ),
-                        iconRes = R.drawable.ic_next,
-                        contentDescription = "next",
-                        color = GlanceTheme.colors.primary.getColor(context),
-                    )
-                }
-            }
-            Box(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(size / 6)
-            ) {
-                Image(
-                    provider = ImageProvider(VoicevoxDataStore.list[count].icon),
-                    contentDescription = "Voicevox",
-                    modifier = GlanceModifier
-                        .cornerRadius(size)
-                        .background(colorProvider = GlanceTheme.colors.surfaceVariant)
-                        .clickable(
-                            onClick = actionStartActivity<MainActivity>(
-                                actionParametersOf(
-                                    destinationKey to "${Screens.Chat.route}/${VoicevoxDataStore.list[count].voicevoxType.name}"
-                                )
-                            )
+        when (currentSize) {
+            SMALL_SQUARE -> {
+                ChatvoxWidgetContentSmall(
+                    size = SMALL_SQUARE,
+                    currentVoicevox = VoicevoxDataStore.list[index],
+                    startChatAction = actionStartActivity<MainActivity>(
+                        actionParametersOf(
+                            destinationKey to "${Screens.Chat.route}/${VoicevoxDataStore.list[index].voicevoxType.name}"
                         )
+                    )
+                )
+            }
+            LARGE_SQUARE -> {
+                ChatvoxWidgetContentLarge(
+                    context = context,
+                    size = LARGE_SQUARE,
+                    currentVoicevox = VoicevoxDataStore.list[index],
+                    decreaseAction = actionRunCallback<UpdateIndexAction>(
+                        parameters = actionParametersOf(
+                            indexKey to (index - 1).let { if (it < 0) VoicevoxDataStore.list.size - 1 else it }
+                        )
+                    ),
+                    increaseAction = actionRunCallback<UpdateIndexAction>(
+                        parameters = actionParametersOf(
+                            indexKey to (index + 1).let { if (it > VoicevoxDataStore.list.size - 1) 0 else it }
+                        )
+                    ),
+                    startChatAction = actionStartActivity<MainActivity>(
+                        actionParametersOf(
+                            destinationKey to "${Screens.Chat.route}/${VoicevoxDataStore.list[index].voicevoxType.name}"
+                        )
+                    )
                 )
             }
         }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ChatvoxWidgetContentLarge(
+    context: Context,
+    size: DpSize,
+    currentVoicevox: Voicevox,
+    increaseAction: Action,
+    decreaseAction: Action,
+    startChatAction: Action
+) {
+    Box(
+        modifier = GlanceModifier
+            .size(size.width, size.height)
+            .background(colorProvider = GlanceTheme.colors.surface),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Row(
+            modifier = GlanceModifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            GlanceIcon(
+                modifier = GlanceModifier
+                    .clickable(
+                        onClick = decreaseAction
+                    ),
+                iconRes = R.drawable.ic_previous,
+                contentDescription = glanceStringResource(id = R.string.previous_icon_description),
+                color = GlanceTheme.colors.primary.getColor(context),
+            )
+            Image(
+                provider = ImageProvider(currentVoicevox.icon),
+                contentDescription = glanceStringResource(id = R.string.voicevox_image_description),
+                modifier = GlanceModifier
+                    .size(glanceDimensionResource(id = R.dimen.widget_icon_size))
+                    .cornerRadius(glanceDimensionResource(id = R.dimen.widget_corner_radius))
+                    .background(colorProvider = GlanceTheme.colors.surfaceVariant)
+                    .clickable(
+                        onClick = startChatAction
+                    )
+            )
+            GlanceIcon(
+                modifier = GlanceModifier
+                    .clickable(
+                        onClick = increaseAction
+                    ),
+                iconRes = R.drawable.ic_next,
+                contentDescription = glanceStringResource(id = R.string.next_icon_description),
+                color = GlanceTheme.colors.primary.getColor(context),
+            )
+        }
+    }
+}
+
+@Composable
+fun ChatvoxWidgetContentSmall(
+    size: DpSize,
+    currentVoicevox: Voicevox,
+    startChatAction: Action
+) {
+    Box(
+        modifier = GlanceModifier
+            .size(size.width, size.height)
+            .padding(glanceDimensionResource(id = R.dimen.medium_padding))
+            .background(colorProvider = GlanceTheme.colors.surface),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            provider = ImageProvider(currentVoicevox.icon),
+            contentDescription = glanceStringResource(id = R.string.voicevox_image_description),
+            modifier = GlanceModifier
+                .cornerRadius(glanceDimensionResource(id = R.dimen.widget_corner_radius))
+                .background(colorProvider = GlanceTheme.colors.surfaceVariant)
+                .clickable(
+                    onClick = startChatAction
+                )
+        )
     }
 }
