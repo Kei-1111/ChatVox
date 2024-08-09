@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ChatVox</string>
+
+    <string name="previous_icon_description">previous</string>
+    <string name="next_icon_description">next</string>
+
+    <string name="voicevox_image_description">voicevox</string>
+
 </resources>
