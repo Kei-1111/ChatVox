@@ -71,7 +71,9 @@ dependencies {
 
     implementation("androidx.glance:glance-appwidget:1.1.0")
     implementation("androidx.glance:glance-material3:1.1.0")
-    
+
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
     // Material3
     implementation(libs.androidx.material3)
 

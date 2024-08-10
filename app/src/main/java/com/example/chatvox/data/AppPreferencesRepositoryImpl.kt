@@ -23,7 +23,6 @@ class AppPreferencesRepositoryImpl @Inject constructor(
         private val IS_FOLLOW_SYSTEM_THEME = booleanPreferencesKey("is_follow_system_theme")
         private val IS_DARK_THEME = booleanPreferencesKey("is_dark_theme")
         private val USER_NAME = stringPreferencesKey("user_name")
-        private val IS_NOT_LOGGED_IN = booleanPreferencesKey("is_not_logged_in")
         private val WIDGET_CURRENT_VOICEVOX_INDEX = intPreferencesKey("widget_current_voicevox_index")
     }
 
@@ -41,7 +40,6 @@ class AppPreferencesRepositoryImpl @Inject constructor(
                 isFollowSystemTheme = preferences[IS_FOLLOW_SYSTEM_THEME] ?: true,
                 isDarkTheme = preferences[IS_DARK_THEME] ?: false,
                 userName = preferences[USER_NAME] ?: "",
-                isNotLoggedIn = preferences[IS_NOT_LOGGED_IN] ?: false
             )
         }
 
@@ -63,7 +61,6 @@ class AppPreferencesRepositoryImpl @Inject constructor(
             preferences[IS_FOLLOW_SYSTEM_THEME] = appSettings.isFollowSystemTheme
             preferences[IS_DARK_THEME] = appSettings.isDarkTheme
             preferences[USER_NAME] = appSettings.userName
-            preferences[IS_NOT_LOGGED_IN] = appSettings.isNotLoggedIn
         }
     }
 

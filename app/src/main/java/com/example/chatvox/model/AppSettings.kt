@@ -5,5 +5,5 @@ data class AppSettings(
     val isFollowSystemTheme: Boolean = true,
     val isDarkTheme: Boolean = false,
     val userName: String = "",
-    val isNotLoggedIn: Boolean = true
+    val isLoading: Boolean = false
 )
