@@ -17,8 +17,10 @@ class MainViewModel @Inject constructor(
 
     val appSettings = appPreferencesRepository.appSettings.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = AppSettings()
+        started = SharingStarted.Eagerly,
+        initialValue = AppSettings(
+            isLoading = true
+        )
     )
 
     fun setUserName(userName: String) {
@@ -26,7 +28,6 @@ class MainViewModel @Inject constructor(
             appPreferencesRepository.updateAppSettings(
                 appSettings.value.copy(
                     userName = userName,
-                    isNotLoggedIn = false
                 )
             )
         }
