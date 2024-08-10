@@ -22,6 +22,7 @@ import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -90,9 +91,20 @@ fun ChatvoxWidgetContentLarge(
     Box(
         modifier = GlanceModifier
             .size(size.width, size.height)
+            .padding(glanceDimensionResource(id = R.dimen.medium_padding))
             .background(colorProvider = GlanceTheme.colors.surface),
         contentAlignment = Alignment.Center
     ) {
+        Image(
+            provider = ImageProvider(currentVoicevox.icon),
+            contentDescription = glanceStringResource(id = R.string.voicevox_image_description),
+            modifier = GlanceModifier
+                .cornerRadius(glanceDimensionResource(id = R.dimen.widget_corner_radius))
+                .background(colorProvider = GlanceTheme.colors.surfaceVariant)
+                .clickable(
+                    onClick = startChatAction
+                )
+        )
         Row(
             modifier = GlanceModifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
@@ -108,17 +120,7 @@ fun ChatvoxWidgetContentLarge(
                 contentDescription = glanceStringResource(id = R.string.previous_icon_description),
                 color = GlanceTheme.colors.primary.getColor(context),
             )
-            Image(
-                provider = ImageProvider(currentVoicevox.icon),
-                contentDescription = glanceStringResource(id = R.string.voicevox_image_description),
-                modifier = GlanceModifier
-                    .size(glanceDimensionResource(id = R.dimen.widget_icon_size))
-                    .cornerRadius(glanceDimensionResource(id = R.dimen.widget_corner_radius))
-                    .background(colorProvider = GlanceTheme.colors.surfaceVariant)
-                    .clickable(
-                        onClick = startChatAction
-                    )
-            )
+            Spacer(modifier = GlanceModifier.defaultWeight())
             GlanceIcon(
                 modifier = GlanceModifier
                     .clickable(
