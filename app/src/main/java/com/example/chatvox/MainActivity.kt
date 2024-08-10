@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
@@ -24,6 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val splashScreen = installSplashScreen()
+
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -31,9 +35,13 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = hiltViewModel()
             val appSettings by viewModel.appSettings.collectAsState()
 
+            splashScreen.setKeepOnScreenCondition {
+                appSettings.isLoading
+            }
+
             val navController = rememberNavController()
 
-            intent.getStringExtra(Screens.KEY_DESTINATION)?.let {
+            intent.getStringExtra(Screens.KEY_DESTINATION)?.takeIf { it.isNotEmpty() }?.let {
                 LaunchedEffect(it) {
                     navController.navigate(it)
                 }
@@ -52,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController
                     )
                 }
-                if(appSettings.isNotLoggedIn) {
+                if(appSettings.userName.isBlank() || appSettings.userName.isEmpty()) {
                     ChatVoxDialog(
                         oldUserName = appSettings.userName,
                         onRegister = viewModel::setUserName
