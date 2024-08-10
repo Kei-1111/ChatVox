@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.chatvox.model.AppSettings
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +22,6 @@ class AppPreferencesRepositoryImpl @Inject constructor(
         private val IS_FOLLOW_SYSTEM_THEME = booleanPreferencesKey("is_follow_system_theme")
         private val IS_DARK_THEME = booleanPreferencesKey("is_dark_theme")
         private val USER_NAME = stringPreferencesKey("user_name")
-        private val WIDGET_CURRENT_VOICEVOX_INDEX = intPreferencesKey("widget_current_voicevox_index")
     }
 
     override val appSettings: Flow<AppSettings> = dataStore.data
@@ -43,30 +41,12 @@ class AppPreferencesRepositoryImpl @Inject constructor(
             )
         }
 
-    override val widgetCurrentVoicevoxIndex: Flow<Int> = dataStore.data
-        .catch {
-            if ( it is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw it
-            }
-        }
-        .map { preferences ->
-            preferences[WIDGET_CURRENT_VOICEVOX_INDEX] ?: 0
-        }
-
     override suspend fun updateAppSettings(appSettings: AppSettings) {
         dataStore.edit { preferences ->
             preferences[IS_DYNAMIC_COLOR] = appSettings.isDynamicColor
             preferences[IS_FOLLOW_SYSTEM_THEME] = appSettings.isFollowSystemTheme
             preferences[IS_DARK_THEME] = appSettings.isDarkTheme
             preferences[USER_NAME] = appSettings.userName
-        }
-    }
-
-    override suspend fun updateWidgetCurrentVoicevoxIndex(index: Int) {
-        dataStore.edit { preferences ->
-            preferences[WIDGET_CURRENT_VOICEVOX_INDEX] = index
         }
     }
 }

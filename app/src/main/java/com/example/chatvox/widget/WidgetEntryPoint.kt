@@ -7,6 +7,6 @@ import dagger.hilt.components.SingletonComponent
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
-interface AppPreferencesRepositoryEntryPoint {
+interface WidgetEntryPoint {
     fun appPreferencesRepository(): AppPreferencesRepository
 }

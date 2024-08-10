@@ -20,7 +20,7 @@
     <dimen name="small_widget_size">100.dp</dimen>
     <dimen name="large_widget_size">175.dp</dimen>
     <dimen name="widget_corner_radius">100.dp</dimen>
-    <dimen name="widget_icon_size">130.dp</dimen>
+    <dimen name="widget_icon_size">120.dp</dimen>
 
 <!--    Padding Values    -->
     <dimen name="tiny_padding">3.dp</dimen>
